@@ -1,0 +1,2472 @@
+{
+	"info": {
+		"_postman_id": "46e1afb0-8056-44cb-9693-80140dd04986",
+		"name": "Conduit",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26670544",
+		"_collection_link": "https://www.postman.com/sashaglk/workspace/learning-api/collection/26670544-46e1afb0-8056-44cb-9693-80140dd04986?action=share&source=collection_link&creator=26670544"
+	},
+	"item": [
+		{
+			"name": "Signed out",
+			"item": [
+				{
+					"name": "Sign up - myUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Test - User is signed up and token, username, email are set in env\r",
+									"pm.test(\"User is SIGNED UP (Status: 200) AND token, username, email are set in the environment\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.environment.set('myToken', pm.response.json().user.token);\r",
+									"    pm.environment.set('myUsername', pm.response.json().user.username);\r",
+									"    pm.environment.set('myEmail', pm.response.json().user.email);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"username\": \"{{$randomFirstName}}{{$randomLastName}}\",\r\n        \"email\": \"{{$randomEmail}}\",\r\n        \"password\": \"{{password}}\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign up - otherUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Test - User is signed up and token, username, email are set in env\r",
+									"pm.test(\"User is SIGNED UP (Status: 200) AND token, username, email are set in the environment\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.environment.set('otherToken', pm.response.json().user.token);\r",
+									"    pm.environment.set('otherUsername', pm.response.json().user.username);\r",
+									"    pm.environment.set('otherEmail', pm.response.json().user.email);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"username\": \"{{$randomFirstName}}{{$randomLastName}}\",\r\n        \"email\": \"{{$randomEmail}}\",\r\n        \"password\": \"{{password}}\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Profile is RECEIVED (Status: 200)\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/profiles/{{myUsername}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"profiles",
+								"{{myUsername}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Post is RECEIVED (Status: 200)\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Request - Create article\r",
+									"const linkCreateArticle = pm.environment.get(\"url\") + \"/api/articles\";\r",
+									"const token = \"Token \" + pm.environment.get(\"myToken\");\r",
+									"const requestBodyCreateArticle = { \r",
+									"    \"article\": {\r",
+									"        \"title\": \"title\",\r",
+									"        \"description\": \"description\",\r",
+									"        \"body\": \"body\",\r",
+									"        \"tagList\": [\"tag\"]\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"pm.sendRequest({\r",
+									"        \"url\": linkCreateArticle,\r",
+									"        \"method\": \"POST\",\r",
+									"        \"header\": {\r",
+									"            \"Authorization\": token,\r",
+									"            \"Content-Type\": \"application/json\"\r",
+									"        },\r",
+									"        \"body\": {\r",
+									"            \"mode\": \"raw\",\r",
+									"            \"raw\": JSON.stringify(requestBodyCreateArticle)\r",
+									"        }\r",
+									"    }, function(err, res) {\r",
+									"        if (err) {\r",
+									"            console.log(err);\r",
+									"        }\r",
+									"\r",
+									"        //Test - Article created and slug is set in env\r",
+									"        pm.test(\"Article is CREATED (Status: 200) AND slug is SET in env\", function () {\r",
+									"            pm.expect(res.code).to.eql(200);\r",
+									"            pm.environment.set('mySlug', res.json().article.slug);\r",
+									"        });\r",
+									"    }\r",
+									");\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/articles/{{mySlug}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"articles",
+								"{{mySlug}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View post comments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Comment is RECEIVED (Status: 200)\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Request - Create article\r",
+									"const token = \"Token \" + pm.environment.get(\"myToken\");\r",
+									"const linkCreateArticle = pm.environment.get(\"url\") + \"/api/articles\";\r",
+									"const requestBodyCreateArticle = { \r",
+									"    \"article\": {\r",
+									"        \"title\": \"title\",\r",
+									"        \"description\": \"description\",\r",
+									"        \"body\": \"body\",\r",
+									"        \"tagList\": [\"tag\"]\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"pm.sendRequest({\r",
+									"        \"url\": linkCreateArticle,\r",
+									"        \"method\": \"POST\",\r",
+									"        \"header\": {\r",
+									"            \"Authorization\": token,\r",
+									"            \"Content-Type\": \"application/json\"\r",
+									"        },\r",
+									"        \"body\": {\r",
+									"            \"mode\": \"raw\",\r",
+									"            \"raw\": JSON.stringify(requestBodyCreateArticle)\r",
+									"        }\r",
+									"    }, function(err, res) {\r",
+									"        if (err) {\r",
+									"            console.log(err);\r",
+									"        }\r",
+									"\r",
+									"        //Test - Article created and slug is set in env\r",
+									"        pm.test(\"Article is CREATED (Status: 200) AND slug is SET in env\", function () {\r",
+									"            pm.expect(res.code).to.eql(200);\r",
+									"            pm.environment.set('mySlug', res.json().article.slug);\r",
+									"        });\r",
+									"    \r",
+									"        //Request - Create comment\r",
+									"        const linkCreateComment = pm.environment.get(\"url\") + \"/api/articles/\" + pm.environment.get(\"mySlug\") + \"/comments\";\r",
+									"        const requestBodyCreateComment = { \r",
+									"            \"comment\": {\r",
+									"                \"body\": \"body\"\r",
+									"            }\r",
+									"        }\r",
+									"        pm.sendRequest({\r",
+									"                \"url\": linkCreateComment,\r",
+									"                \"method\": \"POST\",\r",
+									"                \"header\": {\r",
+									"                    \"Authorization\": token,\r",
+									"                    \"Content-Type\": \"application/json\"\r",
+									"                },\r",
+									"                \"body\": {\r",
+									"                    \"mode\": \"raw\",\r",
+									"                    \"raw\": JSON.stringify(requestBodyCreateComment)\r",
+									"                }\r",
+									"            }, function(err, res) {\r",
+									"                if (err) {\r",
+									"                    console.log(err);\r",
+									"                }\r",
+									"\r",
+									"                //Test - Comment is created and comment ID is set in env\r",
+									"                pm.test(\"Comment is CREATED (Status: 200) AND comment ID is SET in env\", function () {\r",
+									"                    pm.expect(res.code).to.eql(200);\r",
+									"                    pm.environment.set('myCommentID', res.json().comment.id);\r",
+									"                });\r",
+									"            }\r",
+									"        );\r",
+									"    }\r",
+									");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/articles/{{mySlug}}/comments",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"articles",
+								"{{mySlug}}",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign in",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Test - User is signed in and token is set in env\r",
+									"pm.test(\"User is SIGNED IN (Status: 200) AND token SET in env\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.environment.set('myToken', pm.response.json().user.token);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"email\": \"{{myEmail}}\", \r\n        \"password\": \"{{password}}\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/users/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Signed in",
+			"item": [
+				{
+					"name": "Article",
+					"item": [
+						{
+							"name": "Create article",
+							"item": [
+								{
+									"name": "Create article with all valid fields",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"article\": {\r\n        \"title\": \"{{$randomWord}}\",\r\n        \"description\": \"{{$randomWords}}\",\r\n        \"body\": \"{{$randomWords}} {{$randomWords}}\",\r\n        \"tagList\": [\"{{$randomWord}}\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create article with valid title and other empty",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"article\": {\r\n        \"title\": \"{{$randomWord}}\",\r\n        \"description\": \"\",\r\n        \"body\": \"\",\r\n        \"tagList\": [\"\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create article with valid about and other empty",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"article\": {\r\n        \"title\": \"\",\r\n        \"description\": \"{{$randomWords}}\",\r\n        \"body\": \"\",\r\n        \"tagList\": [\"\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create article with valid body and other empty",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"article\": {\r\n        \"title\": \"\",\r\n        \"description\": \"\",\r\n        \"body\": \"{{$randomWords}} {{$randomWords}}\",\r\n        \"tagList\": [\"\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create article with valid tag and other empty",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"article\": {\r\n        \"title\": \"\",\r\n        \"description\": \"\",\r\n        \"body\": \"\",\r\n        \"tagList\": [\"{{$randomWord}}\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create article with empty fields",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"article\": {\r\n        \"title\": \"\",\r\n        \"description\": \"\",\r\n        \"body\": \"\",\r\n        \"tagList\": [\"\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"//Test - Article is created and slug is set in env",
+											"pm.test(\"Article is CREATED (Status: 200) AND slug SET in env\", function () {",
+											"    pm.response.to.have.status(200);",
+											"    pm.environment.set('mySlug', pm.response.json().article.slug);",
+											"});",
+											"",
+											"//Request - Deleting the article",
+											"const link = pm.environment.get(\"url\") + \"/api/articles/\" + pm.environment.get(\"mySlug\");",
+											"const token = \"Token \" + pm.environment.get(\"myToken\");",
+											"",
+											"pm.sendRequest({",
+											"        \"url\": link,",
+											"        \"method\": \"DELETE\",",
+											"        \"header\": {",
+											"            \"Authorization\": token",
+											"        }",
+											"    }, function(err, res) {",
+											"        if (err) {",
+											"            console.log(err);",
+											"        }",
+											"",
+											"        //Test - Article and slug are deleted",
+											"        pm.test(\"Article is DELETED (Status: 204) AND slug is DELETED from env\", function () {",
+											"            pm.expect(res.code).to.eql(204);",
+											"            pm.environment.set('mySlug', \"\");",
+											"        });      ",
+											"    }",
+											");",
+											""
+										]
+									}
+								}
+							]
+						},
+						{
+							"name": "Edit article",
+							"item": [
+								{
+									"name": "Edit article - edit all fields",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"article\": {\r\n        \"title\": \"{{$randomWord}}\",\r\n        \"description\": \"{{$randomWords}}\",\r\n        \"body\": \"{{$randomWords}} {{$randomWords}}\",\r\n        \"tagList\": [\"{{$randomWord}}\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit article - leave only title",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"article\": {\r\n        \"title\": \"{{$randomWord}}\",\r\n        \"description\": \"\",\r\n        \"body\": \"\",\r\n        \"tagList\": [\"\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit article - leave only about",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"article\": {\r\n        \"title\": \"\",\r\n        \"description\": \"{{$randomWords}}\",\r\n        \"body\": \"\",\r\n        \"tagList\": [\"\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit article - leave only body",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"article\": {\r\n        \"title\": \"\",\r\n        \"description\": \"\",\r\n        \"body\": \"{{$randomWords}} {{$randomWords}}\",\r\n        \"tagList\": [\"\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit article - leave only tag",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"article\": {\r\n        \"title\": \"\",\r\n        \"description\": \"\",\r\n        \"body\": \"\",\r\n        \"tagList\": [\"{{$randomWord}}\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit article - delete all fields",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"article\": {\r\n        \"title\": \"\",\r\n        \"description\": \"\",\r\n        \"body\": \"\",\r\n        \"tagList\": [\"\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit a deleted article",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Test - Article and slug are deleted\r",
+													"pm.test(\"Deleted article is MISSING (Status: 404) AND slug is DELETED from env\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"    pm.environment.set('mySlug', \"\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//Request - Deleting the article\r",
+													"const link = pm.environment.get(\"url\") + \"/api/articles/\" + pm.environment.get(\"mySlug\");\r",
+													"const token = \"Token \" + pm.environment.get(\"myToken\");\r",
+													"\r",
+													"pm.sendRequest({\r",
+													"        \"url\": link,\r",
+													"        \"method\": \"DELETE\",\r",
+													"        \"header\": {\r",
+													"            \"Authorization\": token\r",
+													"        }\r",
+													"    }, function(err, res) {\r",
+													"        if (err) {\r",
+													"            console.log(err);\r",
+													"        }\r",
+													"\r",
+													"        //Test - Article and slug are deleted\r",
+													"        pm.test(\"Article is DELETED (Status: 204)\", function () {\r",
+													"            pm.expect(res.code).to.eql(204);\r",
+													"        });        \r",
+													"    }\r",
+													");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"article\": {\r\n        \"title\": \"{{$randomWord}}\",\r\n        \"description\": \"{{$randomWords}}\",\r\n        \"body\": \"{{$randomWords}} {{$randomWords}}\",\r\n        \"tagList\": [\"{{$randomWord}}\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit other user's article",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Test - Article editing is forbidden\r",
+													"pm.test(\"Other user editing is FORBIDDEN (Status: 403)\", function () {\r",
+													"    pm.response.to.have.status(403);\r",
+													"});\r",
+													"\r",
+													"//Request - Deleting the article\r",
+													"const link = pm.environment.get(\"url\") + \"/api/articles/\" + pm.environment.get(\"mySlug\");\r",
+													"const token = \"Token \" + pm.environment.get(\"myToken\");\r",
+													"\r",
+													"pm.sendRequest({\r",
+													"        \"url\": link,\r",
+													"        \"method\": \"DELETE\",\r",
+													"        \"header\": {\r",
+													"            \"Authorization\": token\r",
+													"        }\r",
+													"    }, function(err, res) {\r",
+													"        if (err) {\r",
+													"            console.log(err);\r",
+													"        }\r",
+													"\r",
+													"        //Test - Article and slug are deleted\r",
+													"        pm.test(\"Article is DELETED (Status: 204) AND slug is DELETED from env\", function () {\r",
+													"            pm.expect(res.code).to.eql(204);\r",
+													"            pm.environment.set('mySlug', \"\");\r",
+													"        });        \r",
+													"    }\r",
+													");"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//Request - Other user sign in\r",
+													"const linkSignIn = pm.environment.get(\"url\") + \"/api/users/login\";\r",
+													"const email = pm.environment.get(\"otherEmail\");\r",
+													"const password = pm.environment.get(\"password\");\r",
+													"const requestBodySignIn = { \r",
+													"    \"user\": {\r",
+													"        \"email\": email, \r",
+													"        \"password\": password\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"pm.sendRequest({\r",
+													"        \"url\": linkSignIn,\r",
+													"        \"method\": \"POST\",\r",
+													"        \"header\": {\r",
+													"            \"Content-Type\": \"application/json\"\r",
+													"        },\r",
+													"        \"body\": {\r",
+													"            \"mode\": \"raw\",\r",
+													"            \"raw\": JSON.stringify(requestBodySignIn)\r",
+													"        }\r",
+													"    }, function(err, res) {\r",
+													"        if (err) {\r",
+													"            console.log(err);\r",
+													"        }\r",
+													"\r",
+													"        //Test - Other user is signed in and other token is set in env\r",
+													"        pm.test(\"Other user is SIGNED IN (Status: 200) AND other token is SET in env\", function () {\r",
+													"            pm.expect(res.code).to.eql(200);\r",
+													"            pm.environment.set('otherToken', res.json().user.token);\r",
+													"        });\r",
+													"    }\r",
+													");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "Token {{otherToken}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "Authorization",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"article\": {\r\n        \"title\": \"{{$randomWord}}\",\r\n        \"description\": \"{{$randomWords}}\",\r\n        \"body\": \"{{$randomWords}} {{$randomWords}}\",\r\n        \"tagList\": [\"{{$randomWord}}\"]\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"//Request - Create article",
+											"const linkCreateArticle = pm.environment.get(\"url\") + \"/api/articles\";",
+											"const token = \"Token \" + pm.environment.get(\"myToken\");",
+											"const requestBodyCreateArticle = { ",
+											"    \"article\": {",
+											"        \"title\": \"title\",",
+											"        \"description\": \"description\",",
+											"        \"body\": \"body\",",
+											"        \"tagList\": [\"tag\"]",
+											"    }",
+											"}",
+											"",
+											"pm.sendRequest({",
+											"        \"url\": linkCreateArticle,",
+											"        \"method\": \"POST\",",
+											"        \"header\": {",
+											"            \"Authorization\": token,",
+											"            \"Content-Type\": \"application/json\"",
+											"        },",
+											"        \"body\": {",
+											"            \"mode\": \"raw\",",
+											"            \"raw\": JSON.stringify(requestBodyCreateArticle)",
+											"        }",
+											"    }, function(err, res) {",
+											"        if (err) {",
+											"            console.log(err);",
+											"        }",
+											"",
+											"        //Test - Article created and slug is set in env",
+											"        pm.test(\"Article is CREATED (Status: 200) AND slug is SET in env\", function () {",
+											"            pm.expect(res.code).to.eql(200);",
+											"            pm.environment.set('mySlug', res.json().article.slug);",
+											"        });",
+											"    }",
+											");",
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"//Ommiting tests for certain reqests",
+											"if (",
+											"    pm.info.requestName !== \"Edit other user's article\" && ",
+											"    pm.info.requestName !== \"Edit a deleted article\") {",
+											"",
+											"    //Test - Article is edited",
+											"    pm.test(\"Article is EDITED (Status: 200)\", function () {",
+											"        pm.response.to.have.status(200);",
+											"    });",
+											"",
+											"    //Request - Deleting the article",
+											"    const link = pm.environment.get(\"url\") + \"/api/articles/\" + pm.environment.get(\"mySlug\");",
+											"    const token = \"Token \" + pm.environment.get(\"myToken\");",
+											"",
+											"    pm.sendRequest({",
+											"            \"url\": link,",
+											"            \"method\": \"DELETE\",",
+											"            \"header\": {",
+											"                \"Authorization\": token",
+											"            }",
+											"        }, function(err, res) {",
+											"            if (err) {",
+											"                console.log(err);",
+											"            }",
+											"",
+											"            //Test - Article and slug are deleted",
+											"            pm.test(\"Article is DELETED (Status: 204) AND slug is DELETED from env\", function () {",
+											"                pm.expect(res.code).to.eql(204);",
+											"                pm.environment.set('mySlug', \"\");",
+											"            });        ",
+											"        }",
+											"    );",
+											"}"
+										]
+									}
+								}
+							]
+						},
+						{
+							"name": "Delete article",
+							"item": [
+								{
+									"name": "Delete article",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete a deleted article",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Test - Article is missing and slug is deleted\r",
+													"pm.test(\"Deleted article is MISSING (Status: 404) AND slug is DELETED from env\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"    pm.environment.set('mySlug', \"\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//Request - Deleting the article\r",
+													"const link = pm.environment.get(\"url\") + \"/api/articles/\" + pm.environment.get(\"mySlug\");\r",
+													"const token = \"Token \" + pm.environment.get(\"myToken\");\r",
+													"\r",
+													"pm.sendRequest({\r",
+													"        \"url\": link,\r",
+													"        \"method\": \"DELETE\",\r",
+													"        \"header\": {\r",
+													"            \"Authorization\": token\r",
+													"        }\r",
+													"    }, function(err, res) {\r",
+													"        if (err) {\r",
+													"            console.log(err);\r",
+													"        };\r",
+													"\r",
+													"        //Test - Article is deleted\r",
+													"        pm.test(\"Article is DELETED (Status: 204)\", function () {\r",
+													"            pm.expect(res.code).to.eql(204);\r",
+													"        });  \r",
+													"    }\r",
+													");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete other user's article",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Test - Article deltion is forbidden\r",
+													"pm.test(\"Other user deletion is FORBIDDEN (Status: 403)\", function () {\r",
+													"    pm.response.to.have.status(403);\r",
+													"});\r",
+													"\r",
+													"//Request - Deleting the article\r",
+													"const link = pm.environment.get(\"url\") + \"/api/articles/\" + pm.environment.get(\"mySlug\");\r",
+													"const token = \"Token \" + pm.environment.get(\"myToken\");\r",
+													"\r",
+													"pm.sendRequest({\r",
+													"        \"url\": link,\r",
+													"        \"method\": \"DELETE\",\r",
+													"        \"header\": {\r",
+													"            \"Authorization\": token\r",
+													"        }\r",
+													"    }, function(err, res) {\r",
+													"        if (err) {\r",
+													"            console.log(err);\r",
+													"        }\r",
+													"\r",
+													"        //Test - Article and slug are deleted\r",
+													"        pm.test(\"Article is DELETED (Status: 204) AND slug is DELETED from env\", function () {\r",
+													"            pm.expect(res.code).to.eql(204);\r",
+													"            pm.environment.set('mySlug', \"\");\r",
+													"        });        \r",
+													"    }\r",
+													");"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//Request - Other user sign in\r",
+													"const linkSignIn = pm.environment.get(\"url\") + \"/api/users/login\";\r",
+													"const email = pm.environment.get(\"otherEmail\");\r",
+													"const password = pm.environment.get(\"password\");\r",
+													"const requestBodySignIn = { \r",
+													"    \"user\": {\r",
+													"        \"email\": email, \r",
+													"        \"password\": password\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"pm.sendRequest({\r",
+													"        \"url\": linkSignIn,\r",
+													"        \"method\": \"POST\",\r",
+													"        \"header\": {\r",
+													"            \"Content-Type\": \"application/json\"\r",
+													"        },\r",
+													"        \"body\": {\r",
+													"            \"mode\": \"raw\",\r",
+													"            \"raw\": JSON.stringify(requestBodySignIn)\r",
+													"        }\r",
+													"    }, function(err, res) {\r",
+													"        if (err) {\r",
+													"            console.log(err);\r",
+													"        }\r",
+													"\r",
+													"        //Test - Other user is signed in and other token is set in env\r",
+													"        pm.test(\"Other user is SIGNED IN (Status: 200) AND other token is SET in env\", function () {\r",
+													"            pm.expect(res.code).to.eql(200);\r",
+													"            pm.environment.set('otherToken', res.json().user.token);\r",
+													"        });\r",
+													"    }\r",
+													");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "Token {{otherToken}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "Authorization",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"//Request - Create article",
+											"const linkCreateArticle = pm.environment.get(\"url\") + \"/api/articles\";",
+											"const token = \"Token \" + pm.environment.get(\"myToken\");",
+											"const requestBodyCreateArticle = { ",
+											"    \"article\": {",
+											"        \"title\": \"title\",",
+											"        \"description\": \"description\",",
+											"        \"body\": \"body\",",
+											"        \"tagList\": [\"tag\"]",
+											"    }",
+											"}",
+											"",
+											"pm.sendRequest({",
+											"        \"url\": linkCreateArticle,",
+											"        \"method\": \"POST\",",
+											"        \"header\": {",
+											"            \"Authorization\": token,",
+											"            \"Content-Type\": \"application/json\"",
+											"        },",
+											"        \"body\": {",
+											"            \"mode\": \"raw\",",
+											"            \"raw\": JSON.stringify(requestBodyCreateArticle)",
+											"        }",
+											"    }, function(err, res) {",
+											"        if (err) {",
+											"            console.log(err);",
+											"        }",
+											"",
+											"        //Test - Article created and slug is set in env",
+											"        pm.test(\"Article is CREATED (Status: 200) AND slug is SET in env\", function () {",
+											"            pm.expect(res.code).to.eql(200);",
+											"            pm.environment.set('mySlug', res.json().article.slug);",
+											"        });",
+											"    }",
+											");",
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"//Ommiting tests for certain reqests",
+											"if (",
+											"    pm.info.requestName !== \"Delete a deleted article\" && ",
+											"    pm.info.requestName !== \"Delete other user's article\") {",
+											"",
+											"    //Test - Article and slug are deleted",
+											"    pm.test(\"Article is DELETED (Status: 204) AND slug is DELETED from env\", function () {",
+											"        pm.response.to.have.status(204);",
+											"        pm.environment.set('mySlug', \"\");",
+											"    }); ",
+											"",
+											"}"
+										]
+									}
+								}
+							]
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Comments",
+					"item": [
+						{
+							"name": "Create comment",
+							"item": [
+								{
+									"name": "Post valid comment - myUser",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"comment\": {\r\n        \"body\": \"{{$randomWords}}\"\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}/comments",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}",
+												"comments"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Post valid comment - otherUser",
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "Token {{otherToken}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "Authorization",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"comment\": {\r\n        \"body\": \"{{$randomWords}}\"\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}/comments",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}",
+												"comments"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Post empty comment",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"comment\": {\r\n        \"body\": \"\"\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}/comments",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}",
+												"comments"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Post comment in deleted article",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//Request - Deleting the article\r",
+													"const link = pm.environment.get(\"url\") + \"/api/articles/\" + pm.environment.get(\"mySlug\");\r",
+													"const token = \"Token \" + pm.environment.get(\"myToken\");\r",
+													"\r",
+													"pm.sendRequest({\r",
+													"        \"url\": link,\r",
+													"        \"method\": \"DELETE\",\r",
+													"        \"header\": {\r",
+													"            \"Authorization\": token\r",
+													"        }\r",
+													"    }, function(err, res) {\r",
+													"        if (err) {\r",
+													"            console.log(err);\r",
+													"        };\r",
+													"\r",
+													"        //Test - Article is deleted\r",
+													"        pm.test(\"Article is DELETED (Status: 204)\", function () {\r",
+													"            pm.expect(res.code).to.eql(204);\r",
+													"        });  \r",
+													"    }\r",
+													");"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Test - Article is missing and slug is deleted\r",
+													"pm.test(\"Deleted article is MISSING (Status: 404) AND slug is DELETED from env\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"    pm.environment.set('mySlug', \"\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"comment\": {\r\n        \"body\": \"{{$randomWords}}\"\r\n    }\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}/comments",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}",
+												"comments"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"//Conditions for certain reqests",
+											"if (pm.info.requestName !== \"Post comment in deleted article\") {",
+											"",
+											"    //Test - Comment is created and comment ID is set in env",
+											"    pm.test(\"Comment is CREATED (Status: 200) AND comment id is SET in env\", function () {",
+											"        pm.response.to.have.status(200);",
+											"        pm.environment.set('myCommentID', pm.response.json().comment.id);",
+											"    });",
+											"    ",
+											"    //Request - Deleting the article",
+											"    const linkDeleteArticle = pm.environment.get(\"url\") + \"/api/articles/\" + pm.environment.get(\"mySlug\");",
+											"    const token = \"Token \" + pm.environment.get(\"myToken\");",
+											"",
+											"    pm.sendRequest({",
+											"            \"url\": linkDeleteArticle,",
+											"            \"method\": \"DELETE\",",
+											"            \"header\": {",
+											"                \"Authorization\": token",
+											"            }",
+											"        }, function(err, res) {",
+											"            if (err) {",
+											"                console.log(err);",
+											"            }",
+											"",
+											"            //Test - Article and slug are deleted",
+											"            pm.test(\"Article is DELETED (Status: 204) AND slug is DELETED from env\", function () {",
+											"                pm.expect(res.code).to.eql(204);",
+											"                pm.environment.set('mySlug', \"\");",
+											"            });      ",
+											"        }",
+											"    );",
+											"}"
+										]
+									}
+								}
+							]
+						},
+						{
+							"name": "Delete comment",
+							"item": [
+								{
+									"name": "Delete a comment",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Test - Comment and comment ID are deleted\r",
+													"pm.test(\"Comment is DELETED (Status: 204) AND Commnet ID is DELETED from env\", function () {\r",
+													"    pm.response.to.have.status(204);\r",
+													"    pm.environment.set('myCommentID', \"\");\r",
+													"}); \r",
+													"\r",
+													"//Request - Deleting the article\r",
+													"const linkDeleteArticle = pm.environment.get(\"url\") + \"/api/articles/\" + pm.environment.get(\"mySlug\");\r",
+													"const token = \"Token \" + pm.environment.get(\"myToken\");\r",
+													"pm.sendRequest({\r",
+													"        \"url\": linkDeleteArticle,\r",
+													"        \"method\": \"DELETE\",\r",
+													"        \"header\": {\r",
+													"            \"Authorization\": token\r",
+													"        }\r",
+													"    }, function(err, res) {\r",
+													"        if (err) {\r",
+													"            console.log(err);\r",
+													"        }\r",
+													"\r",
+													"        //Test - Article and slug are deleted\r",
+													"        pm.test(\"Article is DELETED (Status: 204) AND slug is DELETED from env\", function () {\r",
+													"            pm.expect(res.code).to.eql(204);\r",
+													"            pm.environment.set('mySlug', \"\");\r",
+													"        });      \r",
+													"    }\r",
+													");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}/comments/{{myCommentID}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}",
+												"comments",
+												"{{myCommentID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete a comment in a deleted article",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//Request - Deleting the article\r",
+													"const linkDeleteArticle = pm.environment.get(\"url\") + \"/api/articles/\" + pm.environment.get(\"mySlug\");\r",
+													"const token = \"Token \" + pm.environment.get(\"myToken\");\r",
+													"\r",
+													"pm.sendRequest({\r",
+													"        \"url\": linkDeleteArticle,\r",
+													"        \"method\": \"DELETE\",\r",
+													"        \"header\": {\r",
+													"            \"Authorization\": token\r",
+													"        }\r",
+													"    }, function(err, res) {\r",
+													"        if (err) {\r",
+													"            console.log(err);\r",
+													"        }\r",
+													"\r",
+													"        //Test - Article is deleted\r",
+													"        pm.test(\"Article is DELETED (Status: 204)\", function () {\r",
+													"            pm.expect(res.code).to.eql(204);\r",
+													"        });      \r",
+													"    }\r",
+													");"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Test - Comment and comment ID are deleted\r",
+													"pm.test(\"Deleted article and its comment are MISSING (Status: 404) AND slug and Commnet ID are DELETED from env\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"    pm.environment.set('myCommentID', \"\");\r",
+													"    pm.environment.set('mySlug', \"\");\r",
+													"}); \r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}/comments/{{myCommentID}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}",
+												"comments",
+												"{{myCommentID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete other user's comment",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"//Request - Other user sign in\r",
+													"const linkSignIn = pm.environment.get(\"url\") + \"/api/users/login\";\r",
+													"const email = pm.environment.get(\"otherEmail\");\r",
+													"const password = pm.environment.get(\"password\");\r",
+													"const requestBodySignIn = { \r",
+													"    \"user\": {\r",
+													"        \"email\": email, \r",
+													"        \"password\": password\r",
+													"    }\r",
+													"}\r",
+													"\r",
+													"pm.sendRequest({\r",
+													"        \"url\": linkSignIn,\r",
+													"        \"method\": \"POST\",\r",
+													"        \"header\": {\r",
+													"            \"Content-Type\": \"application/json\"\r",
+													"        },\r",
+													"        \"body\": {\r",
+													"            \"mode\": \"raw\",\r",
+													"            \"raw\": JSON.stringify(requestBodySignIn)\r",
+													"        }\r",
+													"    }, function(err, res) {\r",
+													"        if (err) {\r",
+													"            console.log(err);\r",
+													"        }\r",
+													"\r",
+													"        //Test - Other user is signed in and other token is set in env\r",
+													"        pm.test(\"Other user is SIGNED IN (Status: 200) AND other token is SET in env\", function () {\r",
+													"            pm.expect(res.code).to.eql(200);\r",
+													"            pm.environment.set('otherToken', res.json().user.token);\r",
+													"        });\r",
+													"    }\r",
+													");"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//Test - Article deltion is forbidden\r",
+													"pm.test(\"Other user deletion is FORBIDDEN (Status: 403)\", function () {\r",
+													"    pm.response.to.have.status(403);\r",
+													"});\r",
+													"\r",
+													"//Request - Deleting the article\r",
+													"const linkDeleteArticle = pm.environment.get(\"url\") + \"/api/articles/\" + pm.environment.get(\"mySlug\");\r",
+													"const token = \"Token \" + pm.environment.get(\"myToken\");\r",
+													"\r",
+													"pm.sendRequest({\r",
+													"        \"url\": linkDeleteArticle,\r",
+													"        \"method\": \"DELETE\",\r",
+													"        \"header\": {\r",
+													"            \"Authorization\": token\r",
+													"        }\r",
+													"    }, function(err, res) {\r",
+													"        if (err) {\r",
+													"            console.log(err);\r",
+													"        }\r",
+													"\r",
+													"        //Test - Article and slug are deleted\r",
+													"        pm.test(\"Article is DELETED (Status: 204) AND slug is DELETED from env\", function () {\r",
+													"            pm.expect(res.code).to.eql(204);\r",
+													"            pm.environment.set('mySlug', \"\");\r",
+													"        });      \r",
+													"    }\r",
+													");"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "value",
+													"value": "Token {{otherToken}}",
+													"type": "string"
+												},
+												{
+													"key": "key",
+													"value": "Authorization",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}/api/articles/{{mySlug}}/comments/{{myCommentID}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"articles",
+												"{{mySlug}}",
+												"comments",
+												"{{myCommentID}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"//Request - Create comment",
+											"const linkCreateComment = pm.environment.get(\"url\") + \"/api/articles/\" + pm.environment.get(\"mySlug\") + \"/comments\";",
+											"const token = \"Token \" + pm.environment.get(\"myToken\");",
+											"const requestBodyCreateComment = { ",
+											"    \"comment\": {",
+											"        \"body\": \"body\"",
+											"    }",
+											"}",
+											"",
+											"pm.sendRequest({",
+											"        \"url\": linkCreateComment,",
+											"        \"method\": \"POST\",",
+											"        \"header\": {",
+											"            \"Authorization\": token,",
+											"            \"Content-Type\": \"application/json\"",
+											"        },",
+											"        \"body\": {",
+											"            \"mode\": \"raw\",",
+											"            \"raw\": JSON.stringify(requestBodyCreateComment)",
+											"        }",
+											"    }, function(err, res) {",
+											"        if (err) {",
+											"            console.log(err);",
+											"        }",
+											"",
+											"        //Test - Comment is created and comment ID is set in env",
+											"        pm.test(\"Comment is CREATED (Status: 200) AND comment ID is SET in env\", function () {",
+											"            pm.expect(res.code).to.eql(200);",
+											"            pm.environment.set('myCommentID', res.json().comment.id);",
+											"        });",
+											"    }",
+											");"
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							]
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"//Request - Create article",
+									"const linkCreateArticle = pm.environment.get(\"url\") + \"/api/articles\";",
+									"const token = \"Token \" + pm.environment.get(\"myToken\");",
+									"const requestBodyCreateArticle = { ",
+									"    \"article\": {",
+									"        \"title\": \"title\",",
+									"        \"description\": \"description\",",
+									"        \"body\": \"body\",",
+									"        \"tagList\": [\"tag\"]",
+									"    }",
+									"}",
+									"",
+									"pm.sendRequest({",
+									"        \"url\": linkCreateArticle,",
+									"        \"method\": \"POST\",",
+									"        \"header\": {",
+									"            \"Authorization\": token,",
+									"            \"Content-Type\": \"application/json\"",
+									"        },",
+									"        \"body\": {",
+									"            \"mode\": \"raw\",",
+									"            \"raw\": JSON.stringify(requestBodyCreateArticle)",
+									"        }",
+									"    }, function(err, res) {",
+									"        if (err) {",
+									"            console.log(err);",
+									"        }",
+									"",
+									"        //Test - Article created and slug is set in env",
+									"        pm.test(\"Article is CREATED (Status: 200) AND slug is SET in env\", function () {",
+									"            pm.expect(res.code).to.eql(200);",
+									"            pm.environment.set('mySlug', res.json().article.slug);",
+									"        });",
+									"    }",
+									");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Tags",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Tags are RECEIVED (Status: 200)\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/tags",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"tags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Your Feed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Your Feed is RECEIVED (Status: 200)\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/articles/feed?limit=10&offset=0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"articles",
+								"feed"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Global Feed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Global Feed is RECEIVED (Status: 200)\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/articles?limit=10&offset=0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"articles"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update username",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Username is UPDATED (Status: 200) AND username is SET in env\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.environment.set('username', pm.response.json().user.username);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"image\": null,\r\n        \"username\": \"{{myUsername}}{{$randomInt}}\",\r\n        \"bio\": null,\r\n        \"email\": \"{{myEmail}}\",\r\n        \"token\": \"{{myToken}}\",\r\n        \"effectiveImage\": \"https://static.productionready.io/images/smiley-cyrus.jpg\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Email is UPDATED (Status: 200) AND email is SET in env\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.environment.set('email', pm.response.json().user.email);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\": {\r\n        \"image\": null,\r\n        \"username\": \"{{myUsername}}\",\r\n        \"bio\": null,\r\n        \"email\": \"{{$randomEmail}}\",\r\n        \"token\": \"{{myToken}}\",\r\n        \"effectiveImage\": \"https://static.productionready.io/images/smiley-cyrus.jpg\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "apikey",
+				"apikey": [
+					{
+						"key": "value",
+						"value": "Token {{myToken}}",
+						"type": "string"
+					},
+					{
+						"key": "key",
+						"value": "Authorization",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"//Request - Sign in",
+							"const linkSignIn = pm.environment.get(\"url\") + \"/api/users/login\";",
+							"const email = pm.environment.get(\"myEmail\");",
+							"const password = pm.environment.get(\"password\");",
+							"const requestBodySignIn = { ",
+							"    \"user\": {",
+							"        \"email\": email, ",
+							"        \"password\": password",
+							"    }",
+							"}",
+							"",
+							"pm.sendRequest({",
+							"        \"url\": linkSignIn,",
+							"        \"method\": \"POST\",",
+							"        \"header\": {",
+							"            \"Content-Type\": \"application/json\"",
+							"        },",
+							"        \"body\": {",
+							"            \"mode\": \"raw\",",
+							"            \"raw\": JSON.stringify(requestBodySignIn)",
+							"        }",
+							"    }, function(err, res) {",
+							"        if (err) {",
+							"            console.log(err);",
+							"        }",
+							"",
+							"        //Test - User is signed in and token is set in env",
+							"        pm.test(\"User is SIGNED IN (Status: 200) AND token is SET in env\", function () {",
+							"            pm.expect(res.code).to.eql(200);",
+							"            pm.environment.set('myToken', res.json().user.token);",
+							"        });",
+							"    }",
+							");"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
